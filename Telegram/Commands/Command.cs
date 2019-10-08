@@ -16,8 +16,8 @@ namespace WhoTheFuckBot.Telegram.Commands
 
         public virtual bool Canceled(Message message, Account account)
         {
-            return message.Text.ToLower().Equals("cancel") ||
-                message.Text.ToLower().Equals("/cancel");
+            return (message?.Text?.ToLower().Equals("cancel") ?? false) ||
+                (message?.Text?.ToLower().Equals("/cancel") ?? false);
         }
 
         public virtual Response Relieve(Message message, Client client, Account account)
