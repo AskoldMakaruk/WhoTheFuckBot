@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using WhoTheFuckBot.Telegram;
 using WhoTheFuckBot.Telegram.Bot;
 
@@ -8,7 +9,8 @@ namespace WhoTheFuckBot
     {
         private static void Main(string[] args)
         {
-            var bot = new Client("823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA");
+            var token = File.ReadAllText("token.txt");
+            var bot = new Client(token);
             while (true)
             {
                 Console.ReadLine();

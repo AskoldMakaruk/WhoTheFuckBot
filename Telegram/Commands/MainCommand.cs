@@ -47,7 +47,7 @@ namespace WhoTheFuckBot.Telegram.Commands
                 {
                     Bitmap bmp = new Bitmap(@"C:\Users\a.makaruk\Pictures\whothefuck.png");
 
-                    var rect = new Rectangle(160, 85, 110, 70);
+                    var rect = new Rectangle(160, 85, 130, 80);
 
                     Graphics g = Graphics.FromImage(bmp);
 
