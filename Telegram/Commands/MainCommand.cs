@@ -6,6 +6,7 @@ using System.IO;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
 using WhoTheFuckBot.DB.Model;
+using WhoTheFuckBot.Images;
 using WhoTheFuckBot.Telegram.Bot;
 
 namespace WhoTheFuckBot.Telegram.Commands
@@ -48,20 +49,8 @@ namespace WhoTheFuckBot.Telegram.Commands
                     Bitmap bmp = new Bitmap(@"C:\Users\a.makaruk\Pictures\whothefuck.png");
 
                     var rect = new Rectangle(160, 85, 130, 80);
-
-                    Graphics g = Graphics.FromImage(bmp);
-
-                    g.FillRectangle(Brushes.White, new Rectangle(160, 85, 130, 70));
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
                     Font stringFont = new Font("Arial", 16);
-                    stringFont = GetAdjustedFont(g, message.Text, stringFont, rect.Width, 50, 12, true);
-
-                    g.DrawString(message.Text, stringFont, Brushes.Black, rect);
-
-                    g.Flush();
+                    ImageHelper.DrawText(bmp, rect, message.Text, stringFont);
                     var str = new MemoryStream();
 
                     bmp.Save(str, ImageFormat.Png);
@@ -79,35 +68,6 @@ namespace WhoTheFuckBot.Telegram.Commands
             }
 
             return Response.TextMessage(account, "send photo");
-        }
-        public Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int maxFontSize, int minFontSize, bool smallestOnFail)
-        {
-            Font testFont = null;
-            // We utilize MeasureString which we get via a control instance           
-            for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
-            {
-                testFont = new Font(originalFont.Name, adjustedSize, originalFont.Style);
-
-                // Test the string with the new size
-                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont);
-
-                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width))
-                {
-                    // Good font, return it
-                    return testFont;
-                }
-            }
-
-            // If you get here there was no fontsize that worked
-            // return minimumSize or original?
-            if (smallestOnFail)
-            {
-                return testFont;
-            }
-            else
-            {
-                return originalFont;
-            }
         }
     }
 }

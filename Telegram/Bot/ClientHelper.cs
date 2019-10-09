@@ -7,7 +7,6 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using WhoTheFuckBot.DB.Model;
-using StickerSet = WhoTheFuckBot.DB.Model.StickerSet;
 
 namespace WhoTheFuckBot.Telegram.Bot
 {
@@ -15,24 +14,31 @@ namespace WhoTheFuckBot.Telegram.Bot
     {
         private async Task<Message> SendTextMessageAsync(Response m)
         {
-            switch (m.Type)
+            try
             {
-                case ResponseType.AnswerQuery:
-                    break;
-                case ResponseType.EditTextMesage:
-                    return await Bot.EditMessageTextAsync(m.Account, m.EditMessageId, m.Text,
-                        replyMarkup : m.ReplyMarkup as InlineKeyboardMarkup);
+                switch (m.Type)
+                {
+                    case ResponseType.AnswerQuery:
+                        break;
+                    case ResponseType.EditTextMesage:
+                        return await Bot.EditMessageTextAsync(m.Account, m.EditMessageId, m.Text,
+                            replyMarkup : m.ReplyMarkup as InlineKeyboardMarkup);
 
-                case ResponseType.SendDocument:
-                    return await Bot.SendDocumentAsync(m.Account, m.Document, m.Text);
+                    case ResponseType.SendDocument:
+                        return await Bot.SendDocumentAsync(m.Account, m.Document, m.Text);
 
-                case ResponseType.SendPhoto:
-                    return await Bot.SendPhotoAsync(m.Account, m.Document, m.Text);
+                    case ResponseType.SendPhoto:
+                        return await Bot.SendPhotoAsync(m.Account, m.Document, m.Text);
 
-                case ResponseType.TextMessage:
-                    return await Bot.SendTextMessageAsync(m.Account, m.Text, replyToMessageId : m.ReplyToMessageId,
-                        replyMarkup : m.ReplyMarkup);
+                    case ResponseType.TextMessage:
+                        return await Bot.SendTextMessageAsync(m.Account, m.Text, replyToMessageId : m.ReplyToMessageId,
+                            replyMarkup : m.ReplyMarkup);
 
+                }
+            }
+            catch (System.Exception e)
+            {
+                System.Console.WriteLine(e.Message);
             }
             return default;
         }
@@ -52,17 +58,5 @@ namespace WhoTheFuckBot.Telegram.Bot
 
         public async Task GetInfoAndDownloadFileAsync(string documentFileId, MemoryStream ms) =>
             await Bot.GetInfoAndDownloadFileAsync(documentFileId, ms);
-
-        public async Task AddStickerToSetAsync(
-            StickerSet set, InputOnlineFile pngSticker, string emojis) => await Bot.AddStickerToSetAsync((int) set.Account.ChatId, set.PackId, pngSticker, "🔨");
-        public async Task<StickerSet> CreateStickerSet(Account account, InputOnlineFile pngSticker)
-        {
-            await Bot.CreateNewStickerSetAsync((int) account.ChatId, account.Name + "Pack", account.Name, pngSticker, "🔨");
-            return new StickerSet()
-            {
-                Account = account,
-                    Name = account.Name + "Pack"
-            };
-        }
     }
 }

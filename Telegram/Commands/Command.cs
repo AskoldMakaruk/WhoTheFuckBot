@@ -12,6 +12,7 @@ namespace WhoTheFuckBot.Telegram.Commands
         // 1 just handle reply
         // 2 main condition is true
         public abstract int Suitability(Message message, Account account);
+
         public abstract Response Execute(Message message, Client client, Account account);
 
         public virtual bool Canceled(Message message, Account account)
@@ -25,15 +26,16 @@ namespace WhoTheFuckBot.Telegram.Commands
             return new MainCommand().Execute(message, client, account);
         }
 
-        public static KeyboardButton[][] MainKeyboard()
+        public static ReplyKeyboardMarkup MainKeyboard()
         {
-            return new []
-            {
+            return new ReplyKeyboardMarkup(
+
                 new KeyboardButton[]
                 {
-                    "Resize Image"
-                }
-            };
+                    "Add template",
+                    "List templates"
+                }, true
+            );
         }
     }
 }

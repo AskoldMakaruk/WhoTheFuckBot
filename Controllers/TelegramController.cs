@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot.Types;
 using WhoTheFuckBot.DB;
 using WhoTheFuckBot.DB.Model;
@@ -29,29 +30,22 @@ namespace WhoTheFuckBot.Controllers
             }
             return account;
         }
+
+        internal IEnumerable<Template> GetTemplates()
+        {
+            var rnd = new Random();
+            return Context.Templates.ToArray().OrderBy(x => rnd.Next()).Take(10);
+        }
+
         public Account FromMessage(Message message)
         {
-            var start = message.Text?.Length > "/start".Length && message.Text.StartsWith("/start");
-            if (Accounts.ContainsKey(message.Chat.Id) && !start)
+
+            if (Accounts.ContainsKey(message.Chat.Id))
             {
                 return Accounts[message.Chat.Id];
             }
-            var account = Context.Accounts.FirstOrDefault(a => a.ChatId == message.Chat.Id);
-            if (message.Text != null)
-                if (start)
-                {
-                    var param = message.Text.Substring(7);
-                    var base64EncodedBytes = Convert.FromBase64String(param);
-                    param = Encoding.UTF8.GetString(base64EncodedBytes);
-                    var p = param.Split("*");
-                    switch (p[0])
-                    {
-                        case "in":
-                            //create user if null
-                            //add referal
-                            break;
-                    }
-                }
+            var account = Context.Accounts.Include(a => a.DbTemplates).FirstOrDefault(a => a.ChatId == message.Chat.Id);
+
             if (account == null)
             {
                 account = CreateAccount(message);
@@ -93,6 +87,12 @@ namespace WhoTheFuckBot.Controllers
             Context.Accounts.Add(account);
             Context.SaveChanges();
             return account;
+        }
+
+        public void AddTemplate(Template template)
+        {
+            Context.Templates.Add(template);
+            SaveChanges();
         }
 
         #endregion
