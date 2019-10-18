@@ -1,12 +1,12 @@
+using BotApi.DB.Model;
 using Microsoft.EntityFrameworkCore;
-using WhoTheFuckBot.DB.Model;
 
-namespace WhoTheFuckBot.DB
+namespace BotApi.DB
 {
     public class TelegramContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        //public DbSet<Text> Texts { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

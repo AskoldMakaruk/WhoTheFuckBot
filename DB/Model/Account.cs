@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Telegram.Bot.Types;
-using WhoTheFuckBot.Controllers;
 
-namespace WhoTheFuckBot.DB.Model
+namespace BotApi.DB.Model
 {
     public class Account
     {
@@ -11,8 +10,6 @@ namespace WhoTheFuckBot.DB.Model
         public string Name { get; set; }
         public string Language { get; set; }
         public AccountStatus Status { get; set; }
-
-        public StickerSet StickerSet { get; set; }
 
         [NotMapped]
         public TelegramController Controller { get; set; }

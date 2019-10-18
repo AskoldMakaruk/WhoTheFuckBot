@@ -1,20 +1,24 @@
-﻿using System;
 using System.IO;
-using WhoTheFuckBot.Telegram;
-using WhoTheFuckBot.Telegram.Bot;
+using BotApi.Telegram;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
-namespace WhoTheFuckBot
+namespace BotApi
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var token = File.ReadAllText("token.txt");
+            token = "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
             var bot = new Client(token);
-            while (true)
-            {
-                Console.ReadLine();
-            }
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                       .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
         }
     }
 }

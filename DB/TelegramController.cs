@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BotApi.DB.Model;
 using Telegram.Bot.Types;
-using WhoTheFuckBot.DB;
-using WhoTheFuckBot.DB.Model;
 
-namespace WhoTheFuckBot.Controllers
+namespace BotApi.DB
 {
     public class TelegramController
     {
@@ -61,25 +60,7 @@ namespace WhoTheFuckBot.Controllers
             account.Language = message.From.LanguageCode;
             return account;
         }
-        public Account FromQuery(CallbackQuery message)
-        {
-            var account = Context.Accounts.FirstOrDefault(a => a.ChatId == message.From.Id);
-            if (account == null)
-            {
-                account = new Account()
-                {
-                ChatId = message.From.Id,
-                Language = message.From.LanguageCode,
-                Name = message.From.Username,
-                Status = AccountStatus.Start
-                };
-                Context.Accounts.Add(account);
-                SaveChanges();
 
-            }
-            return account;
-
-        }
         private Account CreateAccount(Message message)
         {
             var account = new Account
@@ -96,6 +77,17 @@ namespace WhoTheFuckBot.Controllers
         }
 
         #endregion
+
+        public IEnumerable<Image> GetImages()
+        {
+            return Context.Images.OrderByDescending(m => m.UsedCount).Take(30);
+        }
+
+        public void AddImage(Image img)
+        {
+            Context.Images.Add(img);
+            SaveChanges();
+        }
 
         public void SaveChanges() => Context.SaveChanges();
     }
