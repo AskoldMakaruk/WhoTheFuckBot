@@ -70,10 +70,10 @@ namespace WhoTheFuckBot.Telegram.Commands
                     {
                         image.Save(imgStream, ImageFormat.Png);
                         imgStream.Seek(0, SeekOrigin.Begin);
-                        template.Image = imgStream.ToArray();
+                        template.File = imgStream.ToArray();
                         imgStream.Seek(0, SeekOrigin.Begin);
                         account.Controller.AddTemplate(template);
-                        return Response.SendPhoto(account, new InputOnlineFile(imgStream, "template.png"));
+                        return Response.SendPhoto(account, template);
                     }
 
                 }

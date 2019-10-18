@@ -15,6 +15,7 @@ namespace WhoTheFuckBot.Telegram.Commands
         }
         public override Response Execute(Message message, Client client, Account account)
         {
+            client.Bot.SendMediaGroupAsync(account, account.Controller.GetTemplates().Select(c => new InputMedia()))
             return Response.TextMessage(account, string.Join("\n", account.Controller.GetTemplates().Select(t => $"{t.Name} - /{t.Id}")));
         }
     }

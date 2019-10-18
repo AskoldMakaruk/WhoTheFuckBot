@@ -4,14 +4,15 @@ using System.Drawing;
 
 namespace WhoTheFuckBot.DB.Model
 {
-    public class Template
+    public class Template : TelegramMedia
     {
         public int Id { get; set; }
 
         [ForeignKey("AuthorId")]
         public Account Account { get; set; }
 
-        public byte[] Image { get; set; }
+        public override byte[] File { get; set; }
+        public override string FileId { get; set; }
         public string RectangleString
         {
             get => $"{Rectangle.X};{Rectangle.Y};{Rectangle.Width};{Rectangle.Height}";

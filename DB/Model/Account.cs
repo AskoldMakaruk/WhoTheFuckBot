@@ -17,7 +17,6 @@ namespace WhoTheFuckBot.DB.Model
         [NotMapped]
         public List<Template> Templates => DbTemplates.Select(c => c.Template).ToList();
 
-        [NotMapped]
         public Template CurrentTemplate { get; set; }
 
         [NotMapped]

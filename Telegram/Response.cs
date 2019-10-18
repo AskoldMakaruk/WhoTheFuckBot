@@ -1,4 +1,6 @@
-﻿using Telegram.Bot.Types.InputFiles;
+﻿using System.Collections.Generic;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using WhoTheFuckBot.DB.Model;
 
@@ -35,7 +37,7 @@ namespace WhoTheFuckBot.Telegram
         };
 
         public static Response SendDocument(Account account,
-            InputOnlineFile document,
+            TelegramMedia document,
             string caption = null,
             int replyToMessageId = 0,
             IReplyMarkup replyMarkup = null) => new Response()
@@ -47,8 +49,9 @@ namespace WhoTheFuckBot.Telegram
             Document = document,
             Type = ResponseType.SendDocument
         };
+
         public static Response SendPhoto(Account account,
-            InputOnlineFile document,
+            TelegramMedia document,
             string caption = null,
             int replyToMessageId = 0,
             IReplyMarkup replyMarkup = null) => new Response()
@@ -61,6 +64,11 @@ namespace WhoTheFuckBot.Telegram
             Type = ResponseType.SendPhoto
         };
 
+        public static Response SendAlbum() => new Response
+        {
+
+        };
+
         private Response() { }
 
         public Account Account { get; set; }
@@ -70,7 +78,8 @@ namespace WhoTheFuckBot.Telegram
         public int EditMessageId { get; set; } = 0;
         public bool AnswerQuery { get; set; } = false;
         public string AnswerToMessageId { get; set; }
-        public InputOnlineFile Document { get; set; }
+        public TelegramMedia Document { get; set; }
+        public List<TelegramMedia> Album { get; set; }
         public ResponseType Type { get; private set; }
     }
 
@@ -80,6 +89,7 @@ namespace WhoTheFuckBot.Telegram
         EditTextMesage,
         AnswerQuery,
         SendDocument,
-        SendPhoto
+        SendPhoto,
+        Album
     }
 }

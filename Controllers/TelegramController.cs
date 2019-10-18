@@ -88,7 +88,6 @@ namespace WhoTheFuckBot.Controllers
             Context.SaveChanges();
             return account;
         }
-
         public void AddTemplate(Template template)
         {
             Context.Templates.Add(template);
