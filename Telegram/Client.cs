@@ -22,17 +22,17 @@ namespace BotApi.Telegram
             Controller.Start();
             Images = Controller.GetImages().ToList();
 
-            Bot                      =  new TelegramBotClient(token);
-            Bot.OnMessage            += OnMessageRecieved;
-            Bot.OnInlineQuery        += OnInlineQueryReceived;
+            Bot = new TelegramBotClient(token);
+            Bot.OnMessage += OnMessageRecieved;
+            Bot.OnInlineQuery += OnInlineQueryReceived;
             Bot.OnInlineResultChosen += OnInlineResultChosen;
 
             Bot.StartReceiving();
         }
 
         public static TelegramController Controller { get; set; }
-        public static List<Image>        Images     { get; set; }
-        public        TelegramBotClient  Bot        { get; }
+        public static List<Image> Images { get; set; }
+        public TelegramBotClient Bot { get; }
 
         public async void OnMessageRecieved(object sender, MessageEventArgs e)
         {
@@ -40,14 +40,14 @@ namespace BotApi.Telegram
             if (message.Type == MessageType.Photo)
             {
                 var photo = message.Photo.Last();
-                using (var stream = new MemoryStream())
+                using(var stream = new MemoryStream())
                 {
                     await GetInfoAndDownloadFileAsync(photo.FileId, stream);
                     var image = new Image
                     {
                         TelegramId = photo.FileId,
-                        UsedCount  = 0,
-                        Value      = stream.ToArray()
+                        UsedCount = 0,
+                        Value = stream.ToArray()
                     };
                     Controller.AddImage(image);
                     Images = Controller.GetImages().ToList();
@@ -59,7 +59,7 @@ namespace BotApi.Telegram
             Console.WriteLine(DateTime.Now.ToShortTimeString() + " " + e.Message.From.Username + ": " + e.Message.Text);
         }
 
-        public static string Route => "/api?imageName=";
+        public static string Route => "http://http://cottonbox.in.ua/Image/";
 
         public async void OnInlineQueryReceived(object sender, InlineQueryEventArgs e)
         {
@@ -77,15 +77,21 @@ namespace BotApi.Telegram
                     imgs.RemoveAll(i => i.AccountId == query.From.Id);
 
                     var newImgs = Images.Select(im =>
-                                        (ImageHelper.DrawText(im, query.Query), $"{im.Id}_{query.From.Id}.jpeg",
-                                            query.From.Id))
-                                        .ToList();
+                            (ImageHelper.DrawText(im, query.Query), $"{im.Id}_{query.From.Id}.jpg",
+                                query.From.Id))
+                        .ToList();
 
                     imgs.AddRange(newImgs);
 
-                    await Bot.AnswerInlineQueryAsync(query.Id,
-                        newImgs.Select(m => new InlineQueryResultCachedPhoto(m.Id.ToString(), Route + m.Item2))
-                               .ToArray());
+                    var resultImages = newImgs.Select(m => new InlineQueryResultPhoto(Guid.NewGuid().ToString(), Route + m.Item2, Route + m.Item2))
+                        .ToArray();
+                    foreach (var img in resultImages)
+                        System.Console.WriteLine(img.ThumbUrl);
+                    await Bot.AnswerInlineQueryAsync(query.Id, resultImages);
+                    // await Bot.AnswerInlineQueryAsync(query.Id, new []
+                    // {
+                    //     new InlineQueryResultPhoto("1", "https://imgflip.com/s/meme/Mocking-Spongebob.jpg", "https://imgflip.com/s/meme/Mocking-Spongebob.jpg")
+                    // });
                 }
             }
             catch (Exception ex)
@@ -116,6 +122,6 @@ namespace BotApi.Telegram
         }
 
         public async Task GetInfoAndDownloadFileAsync(string documentFileId, MemoryStream ms) =>
-        await Bot.GetInfoAndDownloadFileAsync(documentFileId, ms);
+            await Bot.GetInfoAndDownloadFileAsync(documentFileId, ms);
     }
 }

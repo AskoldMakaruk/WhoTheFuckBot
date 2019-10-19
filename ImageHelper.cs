@@ -27,25 +27,24 @@ namespace BotApi
             var stream = new MemoryStream(image.Value);
 
             var source = new Bitmap(stream);
-            var g      = Graphics.FromImage(source);
+            var g = Graphics.FromImage(source);
 
-
-            var c    = (int) (source.Height / 5);
+            var c = (int) (source.Height / 5);
             var area = new Rectangle(0, source.Height - c, source.Width, source.Height - c - 20);
-            g.SmoothingMode     = SmoothingMode.AntiAlias;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.PixelOffsetMode   = PixelOffsetMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             var stringFont = GetAdjustedFont(g, text, new Font("Arial", 24), area.Width, 50, 10, true);
 
             var format = StringFormat.GenericTypographic;
-            var dpi    = g.DpiY;
+            var dpi = g.DpiY;
 
             var size = g.MeasureString(text, stringFont);
 
             var newarea = new RectangleF(
                 area.X + (area.Width - size.Width) / 2, area.Y, size.Width, size.Height);
-            using (var graphicsPath = GetStringPath(text, dpi, newarea, stringFont, format))
+            using(var graphicsPath = GetStringPath(text, dpi, newarea, stringFont, format))
             {
                 g.FillPath(Brushes.White, graphicsPath);
                 g.DrawPath(Pens.Black, graphicsPath);
@@ -53,20 +52,19 @@ namespace BotApi
                 //g.DrawString(text, stringFont, Brushes.Black, area);
             }
 
-
             g.Flush();
 
             stream.Dispose();
             stream = new MemoryStream();
 
-            source.Save(stream, ImageFormat.Png);
+            source.Save(stream, ImageFormat.Jpeg);
             var res = stream.ToArray();
             return res;
         }
 
         public static Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont,
-                                           int      containerWidth,
-                                           int      maxFontSize, int minFontSize, bool smallestOnFail)
+            int containerWidth,
+            int maxFontSize, int minFontSize, bool smallestOnFail)
         {
             Font testFont = null;
             // We utilize MeasureString which we get via a control instance           
