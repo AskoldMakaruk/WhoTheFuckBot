@@ -76,7 +76,7 @@ namespace BotApi.Telegram
                         .ToArray();
                     foreach (var img in resultImages)
                         System.Console.WriteLine(img.ThumbUrl);
-                    await Bot.AnswerInlineQueryAsync(query.Id, resultImages);
+                    await Bot.AnswerInlineQueryAsync(query.Id, resultImages, 0, true);
                 }
             }
             catch (Exception ex)
