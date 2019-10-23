@@ -13,7 +13,7 @@ namespace BotApi
         public static void Main(string[] args)
         {
 
-            var token = File.ReadAllText("token.txt");
+            //var token = File.ReadAllText("token.txt");
             var token = "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
             WebHookController.Bot = new Client(token);
             var bot = WebHookController.Bot.Bot;
