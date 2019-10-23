@@ -35,8 +35,8 @@ namespace BotApi.Controllers
             //Not sure what else to do here
             //return Ok();
             //return new EmptyResult();
-            return new FileContentResult(res, $"image/jpeg");
-            //return File(res, "image/jpeg");
+            //return new FileContentResult(res, $"image/jpeg");
+            return File(res, "image/jpeg");
         }
     }
 }
