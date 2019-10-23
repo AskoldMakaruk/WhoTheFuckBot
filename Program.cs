@@ -14,21 +14,21 @@ namespace BotApi
         {
 
             //var token = File.ReadAllText("token.txt");
-            var token = "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
-            WebHookController.Bot = new Client(token);
-            var bot = WebHookController.Bot.Bot;
+            // var token = "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
+            // WebHookController.Bot = new Client(token);
+            // var bot = WebHookController.Bot.Bot;
 
-            var s = bot.GetWebhookInfoAsync().Result;
-            System.Console.WriteLine(s.LastErrorMessage);
-            bot.SetWebhookAsync("https://134.249.124.62.xip.io/WhoTheFuckBot", File.OpenRead("/etc/nginx/certificates/sample-echobot.pem")).Wait();
-            s = bot.GetWebhookInfoAsync().Result;
-            bot.StartReceiving();
+            // var s = bot.GetWebhookInfoAsync().Result;
+            // System.Console.WriteLine(s.LastErrorMessage);
+            // bot.SetWebhookAsync("https://134.249.124.62.xip.io/WhoTheFuckBot", File.OpenRead("/etc/nginx/certificates/sample-echobot.pem")).Wait();
+            // s = bot.GetWebhookInfoAsync().Result;
+            // bot.StartReceiving();
             CreateHostBuilder(args).Build().RunAsync();
             while (true)
             {
 
                 Console.ReadLine();
-                System.Console.WriteLine(bot.GetWebhookInfoAsync().Result.LastErrorMessage);
+                //System.Console.WriteLine(bot.GetWebhookInfoAsync().Result.LastErrorMessage);
 
             }
         }

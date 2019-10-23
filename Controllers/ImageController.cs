@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +19,18 @@ namespace BotApi.Controllers
             new List < (byte[] Image, string Link, int AccountId) > ();
 
         [HttpGet]
-        public FileContentResult Get([FromQuery] string imageName)
+        public IActionResult Get([FromQuery] string imageName)
         {
             System.Console.WriteLine(imageName);
             if (imageName == null) return null;
             var res = Images.FirstOrDefault(i => i.Link == imageName).Image;
             if (res == null) return null;
+
+            // processing the stream.            
+            Response.Body.WriteAsync(res, 0, res.Length);
+
+            return new EmptyResult();
+
             // Response.Clear();
             // Response.Headers.Add("Content-Disposition", "attachment; filename=myfile.jpeg");
             // Response.ContentType = "image/jpeg";
@@ -33,10 +43,9 @@ namespace BotApi.Controllers
             //await Response.SendFileAsync(provider.GetFileInfo("file.jpeg"));
 
             //Not sure what else to do here
-            //return Ok();
-            //return new EmptyResult();
+            //return Ok();            
             //return new FileContentResult(res, $"image/jpeg");
-            return File(res, "image/jpeg");
+            //return File(res, "image/jpeg");
         }
     }
 }
