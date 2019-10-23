@@ -53,11 +53,17 @@ namespace BotApi
             }
 
             g.Flush();
-
+            System.Drawing.Image resizeImage(System.Drawing.Image imgToResize, Size size)
+            {
+                return (System.Drawing.Image) (new Bitmap(imgToResize, size));
+            }
             stream.Dispose();
             stream = new MemoryStream();
+            using(var asd = resizeImage(source, new Size(100, 100)))
+            {
+                asd.Save(stream, ImageFormat.Jpeg);
+            }
 
-            source.Save(stream, ImageFormat.Jpeg);
             var res = stream.ToArray();
             return res;
         }
