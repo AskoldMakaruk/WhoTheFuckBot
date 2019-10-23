@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using BotApi.Telegram;
 using Microsoft.AspNetCore.Hosting;
@@ -12,8 +13,22 @@ namespace BotApi
 
             //var token = File.ReadAllText("token.txt");
             var token = "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
-            var bot = new Client(token);
-            CreateHostBuilder(args).Build().Run();
+            var bot = WebHookController.Bot.Bot;
+
+            var s = bot.GetWebhookInfoAsync().Result;
+            //var bot = new Client(token);
+            System.Console.WriteLine(s.LastErrorMessage);
+            bot.SetWebhookAsync("134.249.124.62.xip.io", File.OpenRead("/etc/nginx/certs/sample-echobot.pem")).Wait();
+            s = bot.GetWebhookInfoAsync().Result;
+            bot.StartReceiving();
+            CreateHostBuilder(args).Build().RunAsync();
+            while (true)
+            {
+
+                Console.ReadLine();
+                System.Console.WriteLine(bot.GetWebhookInfoAsync().Result.LastErrorMessage);
+
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -22,7 +37,7 @@ namespace BotApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .UseUrls("http://localhost:80/")
+                        .UseUrls("http://localhost:8444")
                         .UseStartup<Startup>();
                 });
         }
