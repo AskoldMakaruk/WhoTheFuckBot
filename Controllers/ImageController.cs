@@ -17,7 +17,7 @@ namespace BotApi.Controllers
         [HttpGet]
         public FileContentResult Get([FromQuery] string imageName)
         {
-System.Console.WriteLine(imageName);
+            System.Console.WriteLine(imageName);
             if (imageName == null) return null;
             var res = Images.FirstOrDefault(i => i.Link == imageName).Image;
             if (res == null) return null;
@@ -35,7 +35,7 @@ System.Console.WriteLine(imageName);
             //Not sure what else to do here
             //return Ok();
             //return new EmptyResult();
-            return new FileContentResult(res, $"image/png");
+            return new FileContentResult(res, $"image/jpeg");
             //return File(res, "image/jpeg");
         }
     }
