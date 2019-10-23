@@ -65,21 +65,17 @@ namespace BotApi.Telegram
                     imgs.RemoveAll(i => i.AccountId == query.From.Id);
 
                     var newImgs = Images.Select(im =>
-                            (ImageHelper.DrawText(im, query.Query), $"{im.Id}_{query.From.Id}.jpg",
+                            (ImageHelper.DrawText(im, query.Query), $"{Guid.NewGuid()}.jpg",
                                 query.From.Id))
                         .ToList();
 
                     imgs.AddRange(newImgs);
 
-                    var resultImages = newImgs.Select(m => new InlineQueryResultPhoto(Guid.NewGuid().ToString(), Route + m.Item2, Route + m.Item2))
+                    var resultImages = newImgs.Select(m => new InlineQueryResultPhoto(m.Id.ToString(), Route + m.Item2, Route + m.Item2))
                         .ToArray();
                     foreach (var img in resultImages)
                         System.Console.WriteLine(img.ThumbUrl);
                     await Bot.AnswerInlineQueryAsync(query.Id, resultImages);
-                    // await Bot.AnswerInlineQueryAsync(query.Id, new []
-                    // {
-                    //     new InlineQueryResultPhoto("1", "https://imgflip.com/s/meme/Mocking-Spongebob.jpg", "https://imgflip.com/s/meme/Mocking-Spongebob.jpg")
-                    // });
                 }
             }
             catch (Exception ex)
@@ -120,7 +116,7 @@ namespace BotApi.Telegram
             await HandleMessage(message);
         }
 
-        public static string Route => "http://134.249.124.62.xip.io/Image?imageName=";
+        public static string Route => System.IO.File.Exists("Route.txt") ? System.IO.File.ReadAllText("Route.txt") : "http://134.249.124.62.xip.io/Image?imageName=";
 
         public async void OnInlineQueryReceived(object sender, InlineQueryEventArgs e)
         {
