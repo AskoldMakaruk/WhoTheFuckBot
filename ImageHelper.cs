@@ -59,7 +59,7 @@ namespace BotApi
             }
             stream.Dispose();
             stream = new MemoryStream();
-            using(var asd = resizeImage(source, new Size(100, 100)))
+            using(var asd = resizeImage(source, new Size(200, 200)))
             {
                 asd.Save(stream, ImageFormat.Jpeg);
             }
