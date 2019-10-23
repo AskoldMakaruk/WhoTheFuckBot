@@ -26,8 +26,6 @@ namespace BotApi.Telegram
             Bot.OnMessage += OnMessageRecieved;
             Bot.OnInlineQuery += OnInlineQueryReceived;
             Bot.OnInlineResultChosen += OnInlineResultChosen;
-
-            Bot.StartReceiving();
         }
 
         public static TelegramController Controller { get; set; }
