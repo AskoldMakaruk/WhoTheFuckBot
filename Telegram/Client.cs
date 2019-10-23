@@ -62,7 +62,7 @@ namespace BotApi.Telegram
                 else
                 {
                     var imgs = ImageController.Images;
-                    imgs.RemoveAll(i => i.AccountId == query.From.Id);
+                    //imgs.RemoveAll(i => i.AccountId == query.From.Id);
 
                     var newImgs = Images.Select(im =>
                             (ImageHelper.DrawText(im, query.Query),
