@@ -14,8 +14,8 @@ namespace BotApi.Controllers
         public static List < (byte[] Image, string Link, int AccountId) > Images { get; set; } =
             new List < (byte[] Image, string Link, int AccountId) > ();
 
-        [HttpGet("{imageName}")]
-        public FileContentResult Get(string imageName)
+        [HttpGet]
+        public FileContentResult Get([FromQuery] string imageName)
         {
             if (imageName == null) return null;
             var res = Images.FirstOrDefault(i => i.Link == imageName).Image;

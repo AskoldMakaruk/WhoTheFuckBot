@@ -32,36 +32,26 @@ namespace BotApi.Telegram
         public static List<Image> Images { get; set; }
         public TelegramBotClient Bot { get; }
 
-        public async void OnMessageRecieved(object sender, MessageEventArgs e)
+        public void HandleInlineQueryChoosen(ChosenInlineResult result)
         {
-            var message = e.Message;
-            if (message.Type == MessageType.Photo)
+            try
             {
-                var photo = message.Photo.Last();
-                using(var stream = new MemoryStream())
-                {
-                    await GetInfoAndDownloadFileAsync(photo.FileId, stream);
-                    var image = new Image
-                    {
-                        TelegramId = photo.FileId,
-                        UsedCount = 0,
-                        Value = stream.ToArray()
-                    };
-                    Controller.AddImage(image);
-                    Images = Controller.GetImages().ToList();
-                }
+                var imgs = ImageController.Images;
+                imgs.RemoveAll(i => i.AccountId == result.From.Id);
 
-                await Bot.SendTextMessageAsync(message.Chat, "Image added");
+                var image = Images.FirstOrDefault(i => i.Id == int.Parse(result.ResultId));
+                if (image == null) return;
+                image.UsedCount++;
+                Controller.SaveChanges();
             }
-
-            Console.WriteLine(DateTime.Now.ToShortTimeString() + " " + e.Message.From.Username + ": " + e.Message.Text);
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+            }
         }
 
-        public static string Route => "http://http://cottonbox.in.ua/Image/";
-
-        public async void OnInlineQueryReceived(object sender, InlineQueryEventArgs e)
+        public async Task HandleInlineQuery(InlineQuery query)
         {
-            var query = e.InlineQuery;
             try
             {
                 if (query.Query == "")
@@ -97,26 +87,52 @@ namespace BotApi.Telegram
                 System.Console.WriteLine(ex);
             }
 
-            System.Console.WriteLine(e.InlineQuery.Query);
+            System.Console.WriteLine(query.Query);
+        }
+
+        public async Task HandleMessage(Message message)
+        {
+            if (message.Type == MessageType.Photo)
+            {
+                var photo = message.Photo.Last();
+                using(var stream = new MemoryStream())
+                {
+                    await GetInfoAndDownloadFileAsync(photo.FileId, stream);
+                    var image = new Image
+                    {
+                        TelegramId = photo.FileId,
+                        UsedCount = 0,
+                        Value = stream.ToArray()
+                    };
+                    Controller.AddImage(image);
+                    Images = Controller.GetImages().ToList();
+                }
+
+                await Bot.SendTextMessageAsync(message.Chat, "Image added");
+            }
+
+            Console.WriteLine(DateTime.Now.ToShortTimeString() + " " + message.From.Username + ": " + message.Text);
+        }
+
+        public async void OnMessageRecieved(object sender, MessageEventArgs e)
+        {
+            var message = e.Message;
+            await HandleMessage(message);
+        }
+
+        public static string Route => "http://134.249.124.62.xip.io/Image/";
+
+        public async void OnInlineQueryReceived(object sender, InlineQueryEventArgs e)
+        {
+            var query = e.InlineQuery;
+            await HandleInlineQuery(query);
+
         }
 
         public void OnInlineResultChosen(object sender, ChosenInlineResultEventArgs e)
         {
             var result = e.ChosenInlineResult;
-            try
-            {
-                var imgs = ImageController.Images;
-                imgs.RemoveAll(i => i.AccountId == result.From.Id);
-
-                var image = Images.FirstOrDefault(i => i.Id == int.Parse(result.ResultId));
-                if (image == null) return;
-                image.UsedCount++;
-                Controller.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine(ex.Message);
-            }
+            HandleInlineQueryChoosen(result);
         }
 
         public async Task GetInfoAndDownloadFileAsync(string documentFileId, MemoryStream ms) =>
