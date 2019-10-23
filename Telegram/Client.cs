@@ -66,7 +66,7 @@ namespace BotApi.Telegram
 
                     var newImgs = Images.Select(im =>
                             (ImageHelper.DrawText(im, query.Query),
-                                $"{Guid.NewGuid().ToString().Replace("-","")}.jpg",
+                                $"{new string(Guid.NewGuid().ToString().Replace("-","").Take(10).ToArray())}.jpg",
                                 query.From.Id, Id : im.Id))
                         .ToList();
 
