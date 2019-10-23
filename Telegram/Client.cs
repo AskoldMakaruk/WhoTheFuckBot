@@ -65,7 +65,8 @@ namespace BotApi.Telegram
                     imgs.RemoveAll(i => i.AccountId == query.From.Id);
 
                     var newImgs = Images.Select(im =>
-                            (ImageHelper.DrawText(im, query.Query), $"{Guid.NewGuid()}.jpg",
+                            (ImageHelper.DrawText(im, query.Query),
+                                $"{Guid.NewGuid().ToString().Replace("-","")}.jpg",
                                 query.From.Id))
                         .ToList();
 
