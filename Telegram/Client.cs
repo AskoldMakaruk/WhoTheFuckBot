@@ -120,7 +120,7 @@ namespace BotApi.Telegram
             await HandleMessage(message);
         }
 
-        public static string Route => "http://134.249.124.62.xip.io/Image/";
+        public static string Route => "http://134.249.124.62:80/Image?imageName=";
 
         public async void OnInlineQueryReceived(object sender, InlineQueryEventArgs e)
         {

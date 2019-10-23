@@ -19,7 +19,7 @@ namespace BotApi
 
             var s = bot.GetWebhookInfoAsync().Result;
             System.Console.WriteLine(s.LastErrorMessage);
-            bot.SetWebhookAsync("134.249.124.62.xip.io/WhoTheFuckBot/WebHook", File.OpenRead("/etc/nginx/certs/sample-echobot.pem")).Wait();
+            bot.SetWebhookAsync("https://134.249.124.62.xip.io/WhoTheFuckBot", File.OpenRead("/etc/nginx/certificates/sample-echobot.pem")).Wait();
             s = bot.GetWebhookInfoAsync().Result;
             bot.StartReceiving();
             CreateHostBuilder(args).Build().RunAsync();
