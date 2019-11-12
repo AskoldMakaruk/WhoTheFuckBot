@@ -10,6 +10,8 @@
     <PackageReference Include="Telegram.Bot" Version="15.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\BotFramework\BotFramework.csproj" />
+    <Reference Include="BotFramework">
+      <HintPath>..\BotFramework\BotFramework\bin\Debug\netstandard2.0\BotFramework.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

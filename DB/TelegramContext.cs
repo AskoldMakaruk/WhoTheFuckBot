@@ -6,7 +6,6 @@ namespace WhoTheFuckBot.DB
     public class TelegramContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        //public DbSet<Text> Texts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
