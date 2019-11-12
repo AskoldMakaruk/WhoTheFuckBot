@@ -17,8 +17,10 @@ namespace WhoTheFuckBot.Telegram.Commands
 
         public override Response Execute(Message message, Client client)
         {
-            var controller = new Controllers.TelegramController();
-            controller.FromMessage(message);
+            // var controller = new Controllers.TelegramController();
+            // controller.Start();
+
+            // controller.FromMessage(message);
 
             try
             {
