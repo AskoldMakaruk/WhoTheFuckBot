@@ -11,41 +11,12 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 namespace WhoTheFuckBot.Telegram.Commands
 {
-    public class MainCommand : InputCommand
+    public class MainCommand : StaticCommand
     {
-        public override MessageType[] InputTypes => new MessageType[] { MessageType.Text };
 
-        public Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int maxFontSize, int minFontSize, bool smallestOnFail)
-        {
-            Font testFont = null;
-            // We utilize MeasureString which we get via a control instance           
-            for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
-            {
-                testFont = new Font(originalFont.Name, adjustedSize, originalFont.Style);
+        public override string Alias => "";
 
-                // Test the string with the new size
-                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont);
-
-                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width))
-                {
-                    // Good font, return it
-                    return testFont;
-                }
-            }
-
-            // If you get here there was no fontsize that worked
-            // return minimumSize or original?
-            if (smallestOnFail)
-            {
-                return testFont;
-            }
-            else
-            {
-                return originalFont;
-            }
-        }
-
-        protected override BotFramework.Response Run(Message message, Client client)
+        public override Response Execute(Message message, Client client)
         {
             var controller = new Controllers.TelegramController();
             controller.FromMessage(message);
@@ -82,5 +53,36 @@ namespace WhoTheFuckBot.Telegram.Commands
                 return new Response().SendTextMessage(message.From.Id, "504 internal server error.");
             }
         }
+
+        public Font GetAdjustedFont(Graphics g, string graphicString, Font originalFont, int containerWidth, int maxFontSize, int minFontSize, bool smallestOnFail)
+        {
+            Font testFont = null;
+            // We utilize MeasureString which we get via a control instance           
+            for (int adjustedSize = maxFontSize; adjustedSize >= minFontSize; adjustedSize--)
+            {
+                testFont = new Font(originalFont.Name, adjustedSize, originalFont.Style);
+
+                // Test the string with the new size
+                SizeF adjustedSizeNew = g.MeasureString(graphicString, testFont);
+
+                if (containerWidth > Convert.ToInt32(adjustedSizeNew.Width))
+                {
+                    // Good font, return it
+                    return testFont;
+                }
+            }
+
+            // If you get here there was no fontsize that worked
+            // return minimumSize or original?
+            if (smallestOnFail)
+            {
+                return testFont;
+            }
+            else
+            {
+                return originalFont;
+            }
+        }
+
     }
 }

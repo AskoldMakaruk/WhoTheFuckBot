@@ -43,7 +43,7 @@ namespace WhoTheFuckBot.Controllers
                     var param = message.Text.Substring(7);
                     var base64EncodedBytes = Convert.FromBase64String(param);
                     param = Encoding.UTF8.GetString(base64EncodedBytes);
-                    var p = param.Split("*");
+                    var p = param.Split('*');
                     switch (p[0])
                     {
                         case "in":
