@@ -21,7 +21,7 @@ namespace WhoTheFuckBot.Telegram.Commands
 
             try
             {
-                Bitmap bmp = new Bitmap(@"C:\Users\a.makaruk\Pictures\whothefuck.png");
+                Bitmap bmp = new Bitmap(SetBitmapPath.BitmapPath);
 
                 var rect = new Rectangle(160, 85, 130, 80);
 
