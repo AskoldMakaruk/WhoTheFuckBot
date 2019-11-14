@@ -10,17 +10,14 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
 namespace WhoTheFuckBot.Telegram.Commands
 {
-    public class MainCommand : StaticCommand
+    public class MainCommand : IStaticCommand
     {
-
-        public override string Alias => "";
-
-        public override Response Execute(Message message, Client client)
+        public Response Execute(Message message, Client client)
         {
-            // var controller = new Controllers.TelegramController();
-            // controller.Start();
+            using var controller = new Controllers.Controller();
+            controller.Start();
 
-            // controller.FromMessage(message);
+            controller.FromMessage(message);
 
             try
             {
@@ -46,12 +43,12 @@ namespace WhoTheFuckBot.Telegram.Commands
                 bmp.Save(str, ImageFormat.Png);
                 str.Seek(0, SeekOrigin.Begin);
 
-                return new Response().SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
+                return new Response(this).SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
             }
             catch (Exception e)
             {
                 client.Write(e.ToString());
-                return new Response().SendTextMessage(message.From.Id, "504 internal server error.");
+                return new Response(this).SendTextMessage(message.From.Id, "504 internal server error.");
             }
         }
 
@@ -77,5 +74,6 @@ namespace WhoTheFuckBot.Telegram.Commands
             }
         }
 
+        public bool Suitable(Message message) => true;
     }
 }

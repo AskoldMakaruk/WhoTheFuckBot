@@ -12,10 +12,8 @@ namespace WhoTheFuckBot.DB.Model
         public string Language { get; set; }
         public AccountStatus Status { get; set; }
 
-        public StickerSet StickerSet { get; set; }
-
         [NotMapped]
-        public TelegramController Controller { get; set; }
+        public Controller Controller { get; set; }
 
         public static implicit operator ChatId(Account a) => a.ChatId;
     }

@@ -8,7 +8,7 @@ using WhoTheFuckBot.DB.Model;
 
 namespace WhoTheFuckBot.Controllers
 {
-    public class TelegramController
+    public class Controller : IDisposable
     {
         private TelegramContext Context;
         public void Start()
@@ -31,27 +31,12 @@ namespace WhoTheFuckBot.Controllers
         }
         public Account FromMessage(Message message)
         {
-            var start = message.Text?.Length > "/start".Length && message.Text.StartsWith("/start");
-            if (Accounts.ContainsKey(message.Chat.Id) && !start)
+            if (Accounts.ContainsKey(message.Chat.Id))
             {
                 return Accounts[message.Chat.Id];
             }
             var account = Context.Accounts.FirstOrDefault(a => a.ChatId == message.Chat.Id);
-            if (message.Text != null)
-                if (start)
-                {
-                    var param = message.Text.Substring(7);
-                    var base64EncodedBytes = Convert.FromBase64String(param);
-                    param = Encoding.UTF8.GetString(base64EncodedBytes);
-                    var p = param.Split('*');
-                    switch (p[0])
-                    {
-                        case "in":
-                            //create user if null
-                            //add referal
-                            break;
-                    }
-                }
+
             if (account == null)
             {
                 account = CreateAccount(message);
@@ -98,5 +83,8 @@ namespace WhoTheFuckBot.Controllers
         #endregion
 
         public void SaveChanges() => Context.SaveChanges();
+
+        public void Dispose() => Context.Dispose();
+
     }
 }
