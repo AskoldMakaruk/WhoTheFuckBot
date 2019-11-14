@@ -83,8 +83,6 @@ namespace WhoTheFuckBot.Controllers
         #endregion
 
         public void SaveChanges() => Context.SaveChanges();
-
         public void Dispose() => Context.Dispose();
-
     }
 }
