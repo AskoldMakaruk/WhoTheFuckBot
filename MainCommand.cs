@@ -74,7 +74,7 @@ namespace WhoTheFuckBot.Telegram.Commands
             }
         }
 
-        public bool Suitable(Message message) => true;
+        public bool Suitable(Message message) => !message.Text.StartsWith("/set");
     }
     public class SetBitmapPath : IStaticCommand
     {
