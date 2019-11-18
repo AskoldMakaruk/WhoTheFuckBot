@@ -32,7 +32,7 @@ namespace WhoTheFuckBot.Telegram.Commands
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                Font stringFont = new Font("Arial", 16);
+                Font stringFont = new Font("arial", 16);
                 stringFont = GetAdjustedFont(g, message.Text, stringFont, rect.Width, 50, 12, true);
 
                 g.DrawString(message.Text, stringFont, Brushes.Black, rect);
@@ -74,7 +74,7 @@ namespace WhoTheFuckBot.Telegram.Commands
             }
         }
 
-        public bool Suitable(Message message) => !message.Text.StartsWith("/set");
+        public bool Suitable(Message message) => message.Text != null && !message.Text.StartsWith("/set");
     }
     public class SetBitmapPath : IStaticCommand
     {
@@ -97,7 +97,7 @@ namespace WhoTheFuckBot.Telegram.Commands
         }
         public Response Execute(Message message, Client client)
         {
-            var newpath = message.Text.Substring(4);
+            var newpath = message.Text.Substring(5);
             if (System.IO.File.Exists(newpath))
             {
                 BitmapPath = newpath;
@@ -107,7 +107,7 @@ namespace WhoTheFuckBot.Telegram.Commands
 
         }
 
-        public bool Suitable(Message message) => message.Text.StartsWith("/set") && message.Chat.Id == 249258727;
+        public bool Suitable(Message message) => message.Text != null && message.Text.StartsWith("/set") && message.Chat.Id == 249258727;
 
     }
 }
