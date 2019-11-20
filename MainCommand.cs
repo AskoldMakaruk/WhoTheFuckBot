@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using BotFramework;
 using BotFramework.Bot;
 using BotFramework.Commands;
@@ -32,10 +34,14 @@ namespace WhoTheFuckBot.Telegram.Commands
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                Font stringFont = new Font("arial", 16);
-                stringFont = GetAdjustedFont(g, message.Text, stringFont, rect.Width, 50, 12, true);
+                var installedFontCollection = new InstalledFontCollection();
+                var fontFamilies = installedFontCollection.Families;
+                var fontFamilie = fontFamilies.FirstOrDefault(f => f.Name == "Arial") ?? fontFamilies.First();
+                var font = new Font(fontFamilie, 16);
 
-                g.DrawString(message.Text, stringFont, Brushes.Black, rect);
+                font = GetAdjustedFont(g, message.Text, font, rect.Width, 50, 12, true);
+
+                g.DrawString(message.Text, font, Brushes.Black, rect);
 
                 g.Flush();
                 var str = new MemoryStream();
@@ -75,39 +81,5 @@ namespace WhoTheFuckBot.Telegram.Commands
         }
 
         public bool Suitable(Message message) => message.Text != null && !message.Text.StartsWith("/set");
-    }
-    public class SetBitmapPath : IStaticCommand
-    {
-        static string _path;
-        public static string BitmapPath
-        {
-            get
-            {
-                if (_path == null)
-                {
-                    _path = System.IO.File.Exists("imagepath.txt") ? System.IO.File.ReadAllText("imagepath.txt") : null;
-                }
-                return _path;
-            }
-            set
-            {
-                _path = value;
-                System.IO.File.WriteAllText("imagepath.txt", value);
-            }
-        }
-        public Response Execute(Message message, Client client)
-        {
-            var newpath = message.Text.Substring(5);
-            if (System.IO.File.Exists(newpath))
-            {
-                BitmapPath = newpath;
-                return new Response(this, new MainCommand()).SendTextMessage(message.Chat.Id, "Path set");
-            }
-            else return new Response(this, new MainCommand()).SendTextMessage(message.Chat.Id, "You trying to fuck with me or what?");
-
-        }
-
-        public bool Suitable(Message message) => message.Text != null && message.Text.StartsWith("/set") && message.Chat.Id == 249258727;
-
     }
 }
