@@ -16,10 +16,10 @@ namespace WhoTheFuckBot.Telegram.Commands
     {
         public Response Execute(Message message, Client client)
         {
-            using var controller = new Controllers.Controller();
-            controller.Start();
+            // using var controller = new Controllers.Controller();
+            // controller.Start();
 
-            controller.FromMessage(message);
+            // controller.FromMessage(message);
 
             try
             {
@@ -34,8 +34,22 @@ namespace WhoTheFuckBot.Telegram.Commands
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                var fontFamily = new FontFamily(Path.Combine("Arial", "arial.ttf"));
-                var font = new Font(fontFamily, 16);
+                var resources = GetType().Assembly.GetManifestResourceNames();
+                var fontStream = this.GetType().Assembly.GetManifestResourceStream(resources.First(c => c.Contains(".ttf")));
+                var pfc = new PrivateFontCollection();
+
+                byte[] fontdata = new byte[fontStream.Length];
+                fontStream.Read(fontdata, 0, (int) fontStream.Length);
+                fontStream.Close();
+                unsafe
+                {
+                    fixed(byte * pFontData = fontdata)
+                    {
+                        pfc.AddMemoryFont((System.IntPtr) pFontData, fontdata.Length);
+                    }
+                }
+
+                var font = new Font(pfc.Families[0], 16);
 
                 font = GetAdjustedFont(g, message.Text, font, rect.Width, 50, 12, true);
 
