@@ -10,6 +10,9 @@
     <PackageReference Include="Telegram.Bot" Version="15.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Arial\arial.ttf"/>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BotFramework\BotFramework\BotFramework.csproj" />
   </ItemGroup>
 </Project>

@@ -34,10 +34,8 @@ namespace WhoTheFuckBot.Telegram.Commands
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                var installedFontCollection = new InstalledFontCollection();
-                var fontFamilies = installedFontCollection.Families;
-                var fontFamilie = fontFamilies.FirstOrDefault(f => f.Name == "Arial") ?? fontFamilies.First();
-                var font = new Font(fontFamilie, 16);
+                var fontFamily = new FontFamily(Path.Combine("Arial", "arial.ttf"));
+                var font = new Font(fontFamily, 16);
 
                 font = GetAdjustedFont(g, message.Text, font, rect.Width, 50, 12, true);
 
