@@ -23,7 +23,9 @@ namespace WhoTheFuckBot.Telegram.Commands
 
             try
             {
-                Bitmap bmp = new Bitmap(SetBitmapPath.BitmapPath);
+                var resources = GetType().Assembly.GetManifestResourceNames();
+
+                Bitmap bmp = new Bitmap(this.GetType().Assembly.GetManifestResourceStream(resources.First(c => c.Contains(".png"))));
 
                 var rect = new Rectangle(160, 85, 130, 80);
 
@@ -34,7 +36,6 @@ namespace WhoTheFuckBot.Telegram.Commands
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                var resources = GetType().Assembly.GetManifestResourceNames();
                 var fontStream = this.GetType().Assembly.GetManifestResourceStream(resources.First(c => c.Contains(".ttf")));
                 var pfc = new PrivateFontCollection();
 
