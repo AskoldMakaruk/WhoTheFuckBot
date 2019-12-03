@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using BotFramework;
 using BotFramework.Bot;
 using BotFramework.Commands;
@@ -42,23 +44,49 @@ namespace WhoTheFuckBot.Telegram.Commands
 
             try
             {
+                var text = "Та хто цей ваш " + message.Text + " нахуй?";
                 using var image = Template.Clone();
                 var rectangle = new []
                 {
-                    new PointF(160, 85),
-                    new PointF(160 + 130, 85),
-                    new PointF(160 + 130, 85 + 80),
-                    new PointF(160, 85 + 80),
+                    new PointF(0, 8),
+                    new PointF(512, 8),
+                    new PointF(512, 8 + 135),
+                    new PointF(0, 8 + 135),
                 };
-                image.Mutate(cl => cl.FillPolygon(GraphicsOptions.Default, Brushes.Solid(Color.White), rectangle));
+                //image.Mutate(cl => cl.FillPolygon(GraphicsOptions.Default, Brushes.Solid(Color.White), rectangle));
+                var words = text.Split(' ');
+                //todo this split
+                int minWordsOnLine = 3;
+                int maxWordsOnLine = 6;
+                int wordsOnCurrentLine = 0;
+                var builder = new StringBuilder();
+                if (words.Length > minWordsOnLine)
+                {
+                    for (int i = 0; i < words.Length; i++)
+                    {
+                        if (wordsOnCurrentLine < maxWordsOnLine)
+                        {
+                            builder.Append(words[i] + " ");
+                            wordsOnCurrentLine++;
+                        }
+                        else
+                        {
+                            builder.Append(words[i] + "\n");
+                            wordsOnCurrentLine = 0;
+                        }
 
-                var font = Arial.CreateFont(16, FontStyle.Regular);
-                var size = TextMeasurer.Measure(message.Text, new RendererOptions(font));
+                    }
+                    text = builder.ToString();
+                }
+                var font = Arial.CreateFont(14, FontStyle.Regular);
+                var size = TextMeasurer.Measure(text, new RendererOptions(font));
 
-                float scalingFactor = 80 / size.Height;
+                float maxHeight = 135 / size.Height;
+                float maxWidth = 512 / size.Width;
+                var scalingFactor = maxHeight > maxWidth?maxWidth : maxHeight;
                 var scaledFont = new Font(font, scalingFactor * font.Size);
-
-                image.Mutate(cl => cl.DrawText(message.Text, scaledFont, Color.Black, new PointF(170, 90)));
+                size = TextMeasurer.Measure(text, new RendererOptions(scaledFont));
+                image.Mutate(cl => cl.DrawText(text, scaledFont, Color.Black, new PointF(0, 8)));
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
