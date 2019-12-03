@@ -46,13 +46,13 @@ namespace WhoTheFuckBot.Telegram.Commands
             {
                 var text = "Та хто цей ваш " + message.Text + " нахуй?";
                 using var image = Template.Clone();
-                var rectangle = new []
-                {
-                    new PointF(0, 8),
-                    new PointF(512, 8),
-                    new PointF(512, 8 + 135),
-                    new PointF(0, 8 + 135),
-                };
+                // var rectangle = new []
+                // {
+                //     new PointF(10, 8),
+                //     new PointF(502, 8),
+                //     new PointF(502, 8 + 135),
+                //     new PointF(10, 8 + 135),
+                // };
                 //image.Mutate(cl => cl.FillPolygon(GraphicsOptions.Default, Brushes.Solid(Color.White), rectangle));
                 var words = text.Split(' ');
                 //todo this split
@@ -81,12 +81,16 @@ namespace WhoTheFuckBot.Telegram.Commands
                 var font = Arial.CreateFont(14, FontStyle.Regular);
                 var size = TextMeasurer.Measure(text, new RendererOptions(font));
 
-                float maxHeight = 135 / size.Height;
-                float maxWidth = 512 / size.Width;
+                var canvasPoint = new PointF(15, 15);
+                var canvasSize = new Size(512 - 15, 120);
+
+                float maxHeight = canvasSize.Height / size.Height;
+                float maxWidth = canvasSize.Width / size.Width;
+
                 var scalingFactor = maxHeight > maxWidth?maxWidth : maxHeight;
                 var scaledFont = new Font(font, scalingFactor * font.Size);
                 size = TextMeasurer.Measure(text, new RendererOptions(scaledFont));
-                image.Mutate(cl => cl.DrawText(text, scaledFont, Color.Black, new PointF(0, 8)));
+                image.Mutate(cl => cl.DrawText(text, scaledFont, Color.Black, canvasPoint));
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
