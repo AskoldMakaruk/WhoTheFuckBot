@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,6 +12,7 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
+
 namespace WhoTheFuckBot.Telegram.Commands
 {
     public class MainCommand : IStaticCommand
@@ -37,22 +37,15 @@ namespace WhoTheFuckBot.Telegram.Commands
 
         public Response Execute(Message message, Client client)
         {
-            // using var controller = new Controllers.Controller();
-            // controller.Start();
+            using var controller = new Controllers.Controller();
+            controller.Start();
 
-            // controller.FromMessage(message);
+            controller.FromMessage(message);
 
             try
             {
                 var text = "Та хто цей ваш " + message.Text + " нахуй?";
                 using var image = Template.Clone();
-                // var rectangle = new []
-                // {
-                //     new PointF(10, 8),
-                //     new PointF(502, 8),
-                //     new PointF(502, 8 + 135),
-                //     new PointF(10, 8 + 135),
-                // };
                 //image.Mutate(cl => cl.FillPolygon(GraphicsOptions.Default, Brushes.Solid(Color.White), rectangle));
                 var words = text.Split(' ');
                 //todo this split
