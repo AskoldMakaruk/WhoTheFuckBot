@@ -87,12 +87,12 @@ namespace WhoTheFuckBot.Telegram.Commands
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
-                return new Response(this, new SetBitmapPath()).SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
+                return new Response().SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
             }
             catch (Exception e)
             {
                 client.Write(e.ToString());
-                return new Response(this, new SetBitmapPath()).SendTextMessage(message.From.Id, "504 internal server error.");
+                return new Response().SendTextMessage(message.From.Id, "504 internal server error.");
             }
         }
 

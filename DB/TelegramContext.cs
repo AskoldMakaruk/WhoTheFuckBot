@@ -9,7 +9,7 @@ namespace WhoTheFuckBot.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=data/WhoTheFuckBot.db");
+            optionsBuilder.UseSqlite("Data Source=WhoTheFuckBot.db");
         }
     }
 }
