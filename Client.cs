@@ -9,11 +9,14 @@ namespace WhoTheFuckBot
         public WhoTheFuckClient() : base()
         {
             Name = "WhoTheFuckBot";
-
-            base.IDontCareJustMakeItWork(typeof(MainCommand).Assembly);
+            IDontCareJustMakeItWork(typeof(MainCommand).Assembly);
         }
-
+#if RELEASE
         protected override string Token => "960195138:AAFuiefk1PQw6IEy0z0gL2MxKDZ79DYxSjU";
+#endif
+#if DEBUG
+        protected override string Token => "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
+#endif
 
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using BotFramework;
 using BotFramework.Bot;
-using BotFramework.Commands;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,10 +11,11 @@ using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
+using WhoTheFuckBot.DB.Model;
 
 namespace WhoTheFuckBot.Telegram.Commands
 {
-    public class MainCommand : IStaticCommand
+    public class MainCommand : Command
     {
         private static Image<Rgba32> _template;
         public static Image<Rgba32> Template
@@ -35,18 +35,22 @@ namespace WhoTheFuckBot.Telegram.Commands
         private static readonly FontCollection Fonts = new FontCollection();
         private static readonly FontFamily Arial = Fonts.Install(typeof(MainCommand).Assembly.GetManifestResourceStream(Resources.First(c => c.Contains(".ttf"))));
 
-        public Response Execute(Message message, Client client)
+        public override Response Run(Account account, Message message, Client client)
         {
-            using var controller = new Controllers.Controller();
-            controller.Start();
-
-            controller.FromMessage(message);
-
             try
             {
                 var text = "Та хто цей ваш " + message.Text + " нахуй?";
+                if (!string.IsNullOrEmpty(account.TemplateText))
+                {
+                    if (account.TemplateText.Contains('$'))
+                    {
+                        text = account.TemplateText.Replace("$", message.Text);
+                    }
+                    else text = account.TemplateText + " " + message.Text;
+                }
+
                 using var image = Template.Clone();
-                //image.Mutate(cl => cl.FillPolygon(GraphicsOptions.Default, Brushes.Solid(Color.White), rectangle));
+
                 var words = text.Split(' ');
                 //todo this split
                 int minWordsOnLine = 3;
@@ -87,6 +91,14 @@ namespace WhoTheFuckBot.Telegram.Commands
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
+                account.Controller.AddLog(new DB.Model.Log()
+                {
+                    AccountId = account.Id,
+                        Template = account.TemplateText?? "Та хто цей ваш $ нахуй?",
+                        UserText = message.Text,
+                        Time = DateTime.Now
+                });
+
                 return new Response().SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
             }
             catch (Exception e)
@@ -96,6 +108,6 @@ namespace WhoTheFuckBot.Telegram.Commands
             }
         }
 
-        public bool Suitable(Message message) => message.Text != null && !message.Text.StartsWith("/set");
+        public override bool Suitable(Message message) => message.Text != null && !message.Text.StartsWith("/");
     }
 }

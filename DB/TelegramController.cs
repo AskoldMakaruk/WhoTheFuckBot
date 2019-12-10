@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot.Types;
-using WhoTheFuckBot.DB;
 using WhoTheFuckBot.DB.Model;
 
-namespace WhoTheFuckBot.Controllers
+namespace WhoTheFuckBot.DB
 {
     public class Controller : IDisposable
     {
@@ -15,6 +14,7 @@ namespace WhoTheFuckBot.Controllers
         {
             Context = new TelegramContext();
             Context.Database.EnsureCreated();
+            Context.Database.Migrate();
         }
         #region Account
 
@@ -81,6 +81,12 @@ namespace WhoTheFuckBot.Controllers
         }
 
         #endregion
+
+        public void AddLog(Log log)
+        {
+            Context.Logs.Add(log);
+            SaveChanges();
+        }
 
         public void SaveChanges() => Context.SaveChanges();
         public void Dispose() => Context.Dispose();
