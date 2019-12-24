@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,44 +51,23 @@ namespace WhoTheFuckBot.Telegram.Commands
                 }
 
                 using var image = Template.Clone();
-
                 var words = text.Split(' ');
-                //todo this split
-                int minWordsOnLine = 3;
-                int maxWordsOnLine = 6;
-                int wordsOnCurrentLine = 0;
-                var builder = new StringBuilder();
-                if (words.Length > minWordsOnLine)
-                {
-                    for (int i = 0; i < words.Length; i++)
-                    {
-                        if (wordsOnCurrentLine < maxWordsOnLine)
-                        {
-                            builder.Append(words[i] + " ");
-                            wordsOnCurrentLine++;
-                        }
-                        else
-                        {
-                            builder.Append(words[i] + "\n");
-                            wordsOnCurrentLine = 0;
-                        }
 
-                    }
-                    text = builder.ToString();
-                }
-                var font = Arial.CreateFont(14, FontStyle.Regular);
-                var size = TextMeasurer.Measure(text, new RendererOptions(font));
+                var font = Arial.CreateFont(12, FontStyle.Regular);
 
                 var canvasPoint = new PointF(15, 15);
-                var canvasSize = new Size(512 - 15, 120);
+                var canvasSize = new SizeF(512 - 15, 120);
 
-                float maxHeight = canvasSize.Height / size.Height;
-                float maxWidth = canvasSize.Width / size.Width;
+                font = GetLargestFont(canvasSize, font, text);
 
-                var scalingFactor = maxHeight > maxWidth?maxWidth : maxHeight;
-                var scaledFont = new Font(font, scalingFactor * font.Size);
-                size = TextMeasurer.Measure(text, new RendererOptions(scaledFont));
-                image.Mutate(cl => cl.DrawText(text, scaledFont, Color.Black, canvasPoint));
+                var render = new RendererOptions(font);
+                foreach (var line in SplitTextForMaxWidth(canvasSize.Width, font, text))
+                {
+                    var textSize = TextMeasurer.Measure(line, render);
+                    var point = new PointF(canvasPoint.X + (canvasSize.Width - textSize.Width) / 2, canvasPoint.Y);
+                    image.Mutate(cl => cl.DrawText(line, font, Color.Black, point));
+                    canvasPoint.Y += textSize.Height;
+                }
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
@@ -100,11 +80,58 @@ namespace WhoTheFuckBot.Telegram.Commands
                 });
 
                 return new Response().SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
+
             }
             catch (Exception e)
             {
                 client.Write(e.ToString());
                 return new Response().SendTextMessage(message.From.Id, "504 internal server error.");
+            }
+
+        }
+
+        private Font GetLargestFont(SizeF canvas, Font font, string inputText)
+        {
+            var canvasArea = canvas.Height * canvas.Width;
+            var text = inputText.Replace("\n", " ");
+            for (var i = 0; i < 1000; i++)
+            {
+                var t = GetTextArea(i);
+                var textArea = t.Height * t.Width;
+                if (canvasArea <= textArea || t.Height > canvas.Height)
+                {
+                    return font.Family.CreateFont(i - 1, FontStyle.Regular);
+                }
+            }
+            return font;
+            SizeF GetTextArea(int size)
+            {
+                var font = Arial.CreateFont(size, FontStyle.Regular);
+                return TextMeasurer.Measure(text, new RendererOptions(font));
+            }
+        }
+
+        private IEnumerable<string> SplitTextForMaxWidth(float width, Font font, string input)
+        {
+            var render = new RendererOptions(font);
+            var words = input.Replace("\n", " ").Split(' ');
+            string currentLine = null;
+
+            foreach (var word in words)
+            {
+                if (currentLine == null) currentLine = "";
+
+                if (GetWidth(currentLine + word + " ") > width)
+                {
+                    yield return currentLine.Trim();
+                    currentLine = null;
+                }
+                else currentLine += " " + word;
+            }
+            if (currentLine != null) yield return currentLine;
+            float GetWidth(string line)
+            {
+                return TextMeasurer.Measure(line, render).Width;
             }
         }
 
