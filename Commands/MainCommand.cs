@@ -124,7 +124,7 @@ namespace WhoTheFuckBot.Telegram.Commands
                 if (GetWidth(currentLine + word + " ") > width)
                 {
                     yield return currentLine.Trim();
-                    currentLine = null;
+                    currentLine = word;
                 }
                 else currentLine += " " + word;
             }
