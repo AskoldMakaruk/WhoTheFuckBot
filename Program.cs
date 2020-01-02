@@ -1,15 +1,27 @@
 using System;
+using WhoTheFuckBot.Telegram.Commands;
 
 namespace WhoTheFuckBot
 {
     public static class Program
     {
-        public static void Main(string[] args)
-        {
-            var client = new WhoTheFuckClient();
-            client.OnLog += (c, m) => Console.WriteLine(m);
 
-            Console.ReadLine();
+#if RELEASE
+        static string Token => "960195138:AAFuiefk1PQw6IEy0z0gL2MxKDZ79DYxSjU";
+#endif
+#if DEBUG
+        static string Token => "823973981:AAGYpq1Eyl_AAYGXLeW8s28uCH89S7fsHZA";
+#endif
+        public static void Main()
+        {
+            var client = new BotFramework.Bot.BotBuilder()
+                .UseAssembly(typeof(MainCommand).Assembly)
+                .WithName("WhoTheFuckBot")
+                .WithToken(Token)
+                .UseLogger((c, m) => Console.WriteLine(m))
+                .Build();
+
+            client.Run();
         }
     }
 }
