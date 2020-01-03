@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using BotFramework;
 using BotFramework.Bot;
+using BotFramework.Responses;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -16,7 +15,7 @@ using WhoTheFuckBot.DB.Model;
 
 namespace WhoTheFuckBot.Telegram.Commands
 {
-    public class MainCommand : Command
+    public class MainCommand : StaticCommand
     {
         private static Image<Rgba32> _template;
         public static Image<Rgba32> Template
@@ -36,7 +35,7 @@ namespace WhoTheFuckBot.Telegram.Commands
         private static readonly FontCollection Fonts = new FontCollection();
         private static readonly FontFamily Arial = Fonts.Install(typeof(MainCommand).Assembly.GetManifestResourceStream(Resources.First(c => c.Contains(".ttf"))));
 
-        public override Response Run(Account account, Message message, Client client)
+        public override Response Execute(Account account, Message message, Client client)
         {
             try
             {
