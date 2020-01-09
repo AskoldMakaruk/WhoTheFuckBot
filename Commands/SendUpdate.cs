@@ -23,5 +23,10 @@ namespace WhoTheFuckBot.Telegram.Commands
         {
             throw new System.NotImplementedException();
         }
+
+        public override bool Suitable(Message message)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace WhoTheFuckBot.Telegram.Commands
     {
         public override Response Execute(Account account, Message message, Client client)
         {
-            return new Response().SendTextMessage(account, "Send any text to receive picture.\n\nUse /set to change template.");
+            return new Response().AddMessage(new TextMessage(account, "Send any text to receive picture.\n\nUse /set to change template."));
         }
 
         public override bool Suitable(Message message) => message.Text == "/start";

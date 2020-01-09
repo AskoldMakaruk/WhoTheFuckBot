@@ -1,4 +1,5 @@
 using System;
+using Serilog;
 using WhoTheFuckBot.Telegram.Commands;
 
 namespace WhoTheFuckBot
@@ -18,7 +19,10 @@ namespace WhoTheFuckBot
                 .UseAssembly(typeof(MainCommand).Assembly)
                 .WithName("WhoTheFuckBot")
                 .WithToken(Token)
-                .UseLogger((c, m) => Console.WriteLine(m))
+                .UseLogger(new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console()
+                    .CreateLogger())
                 .Build();
 
             client.Run();

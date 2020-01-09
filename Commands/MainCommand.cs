@@ -78,13 +78,12 @@ namespace WhoTheFuckBot.Telegram.Commands
                         Time = DateTime.Now
                 });
 
-                return new Response().SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png"));
+                return new Response().AddMessage(new SendPhoto(message.From.Id, new InputOnlineFile(str, "photo.png")));
 
             }
-            catch (Exception e)
+            catch
             {
-                client.Write(e.ToString());
-                return new Response().SendTextMessage(message.From.Id, "504 internal server error.");
+                return new Response().AddMessage(new TextMessage(message.From.Id, "504 internal server error."));
             }
 
         }

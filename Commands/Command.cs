@@ -30,11 +30,6 @@ namespace WhoTheFuckBot.Telegram.Commands
         }
         public abstract Response Execute(Account account, Message message, Client client);
 
-        public abstract bool Suitable(Message message);
-
     }
-    public abstract class StaticCommand : Command, IStaticCommand
-    {
-        public bool Suitable(Update update) => update.Message != null && Suitable(update.Message);
-    }
+    public abstract class StaticCommand : Command, IStaticCommand { }
 }
