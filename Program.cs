@@ -22,6 +22,7 @@ namespace WhoTheFuckBot
                 .UseLogger(new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.Console()
+                    .WriteTo.File("log.log")
                     .CreateLogger())
                 .Build();
 
