@@ -70,7 +70,7 @@ namespace WhoTheFuckBot.Telegram.Commands
                 var str = new MemoryStream();
                 image.SaveAsJpeg(str);
                 str.Seek(0, SeekOrigin.Begin);
-                account.Controller.AddLog(new DB.Model.Log()
+                account.Controller.AddLog(new Log()
                 {
                     AccountId = account.Id,
                         Template = account.TemplateText?? "Та хто цей ваш $ нахуй?",
