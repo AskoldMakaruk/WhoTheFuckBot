@@ -1,7 +1,7 @@
+using MemeBot.Telegram.Commands;
 using Serilog;
-using WhoTheFuckBot.Telegram.Commands;
 
-namespace WhoTheFuckBot
+namespace MemeBot
 {
     public static class Program
     {
@@ -16,7 +16,7 @@ namespace WhoTheFuckBot
         {
             var client = new BotFramework.Bot.BotBuilder()
                 .UseAssembly(typeof(MainCommand).Assembly)
-                .WithName("WhoTheFuckBot")
+                .WithName("MemeBot")
                 .WithToken(Token)
                 .UseLogger(new LoggerConfiguration()
                     .MinimumLevel.Debug()

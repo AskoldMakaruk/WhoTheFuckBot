@@ -1,6 +1,6 @@
 using Telegram.Bot.Types;
 
-namespace WhoTheFuckBot.Telegram.Commands
+namespace MemeBot.Telegram.Commands
 {
     public abstract class AdminCommand : Command
     {

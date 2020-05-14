@@ -1,16 +1,17 @@
+using MemeBot.DB.Model;
 using Microsoft.EntityFrameworkCore;
-using WhoTheFuckBot.DB.Model;
 
-namespace WhoTheFuckBot.DB
+namespace MemeBot.DB
 {
     public class TelegramContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Log> Logs { get; set; }
+        public DbSet<Meme> Memes { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=WhoTheFuckBot.db");
+            optionsBuilder.UseSqlite("Data Source=MemeBot.db");
         }
     }
 }

@@ -2,10 +2,10 @@ using BotFramework;
 using BotFramework.Bot;
 using BotFramework.Commands;
 using BotFramework.Responses;
+using MemeBot.DB.Model;
 using Telegram.Bot.Types;
-using WhoTheFuckBot.DB.Model;
 
-namespace WhoTheFuckBot.Telegram.Commands
+namespace MemeBot.Telegram.Commands
 {
     public class SendUpdateCommand : AdminCommand
     {
